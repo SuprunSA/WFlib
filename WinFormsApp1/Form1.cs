@@ -6,6 +6,7 @@ namespace WinFormsApp1
         {
             InitializeComponent();
             CreateImage();
+            Component.FileName = "C:\\Users\\User\\OneDrive\\Рабочий стол\\1.txt";
         }
 
         private void CreateImage()
@@ -24,6 +25,19 @@ namespace WinFormsApp1
         private void userControl11_AnArrorOccured()
         {
             MessageBox.Show($"An error occured: {userControl11.Error}");
+        }
+
+        private void ButtonSave_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Component.SaveToFile(RichTextBox.Lines);
+                MessageBox.Show("Сохрынено успешно", "Результат", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
