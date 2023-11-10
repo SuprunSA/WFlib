@@ -36,18 +36,20 @@ namespace Students
         {
             if (e.KeyCode == Keys.Enter) 
             {
-                if (Controls[Controls.Count - 1] is StudentControl studentControl) 
+                var results = string.Empty;
+                foreach (var control in Controls)
                 {
-                    var validResult = studentControl.Validate();
-
-                    if (!string.IsNullOrEmpty(validResult)) 
-                        MessageBox.Show(validResult, "Create", MessageBoxButtons.OK);
-                    else
+                    if (control is StudentControl studentControl)
                     {
-                        StudentsToCreate.Add(studentControl.GetStudent(true));
-                        InitAddingMenu();
-                    } 
+                        var validResult = studentControl.Validate();
+                        results += validResult;
+                        if (!string.IsNullOrEmpty(validResult))
+                        {
+                            MessageBox.Show(validResult, "Create", MessageBoxButtons.OK);
+                        }
+                    }
                 }
+                if (string.IsNullOrEmpty(results)) InitAddingMenu();
             }
         }
 
@@ -65,31 +67,32 @@ namespace Students
         {
             try
             {
-                // для последней сущности
-                if (Controls[Controls.Count - 1] is StudentControl studentControl)
+                foreach (var control in Controls)
                 {
-                    var validResult = studentControl.Validate();
-                    if (!string.IsNullOrEmpty(validResult))
+                    if (control is StudentControl studentControl)
                     {
-                        MessageBox.Show(validResult, "Create", MessageBoxButtons.OK);
-                        return;
-                    }
+                        var validResult = studentControl.Validate();
+                        if (!string.IsNullOrEmpty(validResult))
+                        {
+                            MessageBox.Show(validResult, "Create", MessageBoxButtons.OK);
+                            StudentsToCreate.Clear();
+                            return;
+                        }
 
-                    else
-                    {
-                        StudentsToCreate.Add(studentControl.GetStudent(true));
+                        else
+                        {
+                            StudentsToCreate.Add(studentControl.GetStudent(true));
+                        }
                     }
                 }
 
                 await form1.CreateStudents(StudentsToCreate);
                 MessageBox.Show("Сохранение прошло успешно", "Update", MessageBoxButtons.OK);
+                this.Close();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"При сохранении произошла ошибка: {ex.Message}", "Update", MessageBoxButtons.OK);
-            }
-            finally
-            {
                 this.Close();
             }
         }

@@ -68,16 +68,35 @@ namespace WinFormsLibrary1
         {
             var result = new StringBuilder();
 
+            if (string.IsNullOrEmpty(FullName.Text)) 
+            {
+                result.AppendLine("Имя не может быть пустым");
+                FullName.BackColor = Color.Red;
+            }
+
             if (FullName.Text.Length > 50)
+            {
                 result.AppendLine("Полное имя не может превышать 50 символов");
+                FullName.BackColor = Color.Red;
+            }
 
             if (Description.Text.Length > 200)
+            {
                 result.AppendLine("Характеристика не может превышать 200 символов");
-
-            if (string.IsNullOrEmpty(FullName.Text))
-                result.AppendLine("Имя не может быть пустым");
+                Description.BackColor = Color.Red;
+            }
 
             return result.ToString();
+        }
+
+        private void FullName_TextChanged(object sender, EventArgs e)
+        {
+            FullName.BackColor = Color.White;
+        }
+
+        private void Description_TextChanged(object sender, EventArgs e)
+        {
+            Description.BackColor = Color.White;
         }
     }
 }

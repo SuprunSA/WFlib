@@ -55,15 +55,15 @@ namespace Students
 
         private async Task DeleteSelectedStudents()
         {
+            if (!Nidx.Any())
+            {
+                MessageBox.Show("Нет выбранных сущностей", "Delete", MessageBoxButtons.OK);
+                return;
+            }
+
             var result = MessageBox.Show("Вы уверены что хотите удалить выбранные сущности?", "Delete", MessageBoxButtons.OKCancel);
             if (result == DialogResult.OK)
             {
-                if (!Nidx.Any())
-                {
-                    MessageBox.Show("Нет выбранных сущностей", "Delete", MessageBoxButtons.OK);
-                    return;
-                }
-
                 try
                 {
                     await studentService.DeleteStudents(Nidx);
@@ -78,15 +78,14 @@ namespace Students
 
         private async Task DeleteSelectedStudent()
         {
+            if (!Nidx.Any())
+            {
+                MessageBox.Show("Нет выбранной сущности", "Delete", MessageBoxButtons.OK);
+                return;
+            }
             var result = MessageBox.Show("Вы уверены что хотите удалить выбранную сущность?", "Delete", MessageBoxButtons.OKCancel);
             if (result == DialogResult.OK)
             {
-                if (!Nidx.Any())
-                {
-                    MessageBox.Show("Нет выбранной сущности", "Delete", MessageBoxButtons.OK);
-                    return;
-                }
-
                 try
                 {
                     await studentService.DeleteStudent(Nidx.Min());
@@ -162,6 +161,12 @@ namespace Students
                 }
                 else if (e.KeyCode == Keys.U)
                 {
+                    if (!Nidx.Any())
+                    {
+                        MessageBox.Show("Нет выбранных сущностей", "Delete", MessageBoxButtons.OK);
+                        return;
+                    }
+
                     UpdateSelectedStudents();
                 }
                 else if (e.KeyCode == Keys.S)

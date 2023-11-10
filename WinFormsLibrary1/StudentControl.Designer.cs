@@ -50,6 +50,7 @@
             this.FullName.Name = "FullName";
             this.FullName.Size = new System.Drawing.Size(252, 23);
             this.FullName.TabIndex = 2;
+            this.FullName.TextChanged += new System.EventHandler(this.FullName_TextChanged);
             // 
             // Description
             // 
@@ -58,6 +59,7 @@
             this.Description.Name = "Description";
             this.Description.Size = new System.Drawing.Size(363, 23);
             this.Description.TabIndex = 3;
+            this.Description.TextChanged += new System.EventHandler(this.Description_TextChanged);
             // 
             // Stipend
             // 
