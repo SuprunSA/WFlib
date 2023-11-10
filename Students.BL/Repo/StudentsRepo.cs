@@ -49,12 +49,7 @@ namespace Students.BL.Repo
         {
             foreach (var student in students)
             {
-                var st = context.Students.Find(student.Id);
-                st.Description = student.Description;
-                st.Course = student.Course;
-                st.Stipend = student.Stipend;
-                st.FullName = student.FullName;
-                context.Students.Update(st);
+                Update(student);
             }
         }
 

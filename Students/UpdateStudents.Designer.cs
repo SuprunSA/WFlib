@@ -72,6 +72,7 @@
             this.Controls.Add(this.UndoChanges);
             this.Name = "UpdateStudents";
             this.Text = "UpdateStudents";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.OnClose);
             this.ResumeLayout(false);
 
         }

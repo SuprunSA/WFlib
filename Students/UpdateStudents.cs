@@ -42,8 +42,7 @@ namespace Students
             if (result == DialogResult.Cancel) return;
             else
             {
-                this.Dispose();
-                form1.Enabled = true;
+                this.Close();
             }
         }
 
@@ -57,10 +56,27 @@ namespace Students
                     stToUpdate.Add(studentControl.GetStudent());
                 }
             }
-            await form1.UpdateStudents(stToUpdate);
-            this.Dispose();
+
+            try
+            {
+                await form1.UpdateStudents(stToUpdate);
+                MessageBox.Show("Сохранение прошло успешно", "Update", MessageBoxButtons.OK);
+            }
+            catch (Exception ex) 
+            {
+                MessageBox.Show($"При сохранении произошла ошибка: {ex.Message}", "Update", MessageBoxButtons.OK);
+            }
+            finally
+            {
+                this.Close();
+            }
+        }
+
+        private void OnClose(object sender, FormClosedEventArgs e)
+        {
             form1.Enabled = true;
             form1.InitStudents();
+            form1.Focus();
         }
     }
 }

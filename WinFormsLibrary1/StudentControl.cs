@@ -1,4 +1,5 @@
 ﻿using Students.BL;
+using System.Text;
 
 namespace WinFormsLibrary1
 {
@@ -16,14 +17,13 @@ namespace WinFormsLibrary1
         private void StudentControl_Load(object sender, EventArgs e)
         {
             Id.ReadOnly = true;
+            Course.SelectedIndex = 0;
             if (student != default) 
             {
                 Id.Text = student.Id.ToString();
                 FullName.Text = student.FullName;
                 Description.Text = student.Description ?? string.Empty;
-
                 Course.SelectedIndex = (int)student.Course;
-
                 Stipend.Checked = student.Stipend ?? false;
 
                 if (!isUpdating)
@@ -44,7 +44,7 @@ namespace WinFormsLibrary1
             }
         }
 
-        public Student GetStudent()
+        public Student GetStudent(bool isCr = false)
         {
             var course = Course.Text switch
             {
@@ -56,12 +56,28 @@ namespace WinFormsLibrary1
             };
             return new Student()
             {
-                Id = int.Parse(Id.Text),
+                Id = isCr ? 0 : int.Parse(Id.Text),
                 FullName = FullName.Text,
                 Description = Description.Text,
                 Course = course,
                 Stipend = Stipend.Checked,
             };
+        }
+
+        public string Validate()
+        {
+            var result = new StringBuilder();
+
+            if (FullName.Text.Length > 50)
+                result.AppendLine("Полное имя не может превышать 50 символов");
+
+            if (Description.Text.Length > 200)
+                result.AppendLine("Характеристика не может превышать 200 символов");
+
+            if (string.IsNullOrEmpty(FullName.Text))
+                result.AppendLine("Имя не может быть пустым");
+
+            return result.ToString();
         }
     }
 }

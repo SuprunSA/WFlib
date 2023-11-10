@@ -23,13 +23,12 @@ namespace Students
 
         private async Task SaveToPdf()
         {
-            // взять с формы данные, запарсить к массиву строк + заголовок
             var students = await studentService.GetStudents();
             var stToPdf = students.Where(s => s.Stipend == true).Select(x => Parse(x)).ToArray();
             SaveFileDialog dialog = new();
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                PdfComponent.FileName = dialog.FileName + ".docx";
+                PdfComponent.FileName = dialog.FileName;
                 PdfComponent.SaveToFile("Список студентов, получающих стипендию", stToPdf);
             }
         }
@@ -37,7 +36,7 @@ namespace Students
         private string Parse(Student student)
         {
             var desc = string.IsNullOrEmpty(student.Description) ? "Отсутствует" : student.Description;
-            return $"Идентификатор - {student.Id}; Полное имя - {student.FullName}; Характеристика - {desc}";
+            return $"Полное имя - {student.FullName}; Характеристика - {desc}";
         }
 
         private async void UpdateSelectedStudents()
@@ -57,13 +56,47 @@ namespace Students
         private async Task DeleteSelectedStudents()
         {
             var result = MessageBox.Show("Вы уверены что хотите удалить выбранные сущности?", "Delete", MessageBoxButtons.OKCancel);
-            if (result == DialogResult.OK) await studentService.DeleteStudents(Nidx);
+            if (result == DialogResult.OK)
+            {
+                if (!Nidx.Any())
+                {
+                    MessageBox.Show("Нет выбранных сущностей", "Delete", MessageBoxButtons.OK);
+                    return;
+                }
+
+                try
+                {
+                    await studentService.DeleteStudents(Nidx);
+                    MessageBox.Show("Удаление прошло успешно", "Delete", MessageBoxButtons.OK);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"При удалении возникла ошибка: {ex.Message}", "Delete", MessageBoxButtons.OK);
+                }
+            }
         }
 
         private async Task DeleteSelectedStudent()
         {
             var result = MessageBox.Show("Вы уверены что хотите удалить выбранную сущность?", "Delete", MessageBoxButtons.OKCancel);
-            if (result == DialogResult.OK) await studentService.DeleteStudent(Nidx.Min());
+            if (result == DialogResult.OK)
+            {
+                if (!Nidx.Any())
+                {
+                    MessageBox.Show("Нет выбранной сущности", "Delete", MessageBoxButtons.OK);
+                    return;
+                }
+
+                try
+                {
+                    await studentService.DeleteStudent(Nidx.Min());
+                    MessageBox.Show("Удаление прошло успешно", "Delete", MessageBoxButtons.OK);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"При удалении возникла ошибка: {ex.Message}", "Delete", MessageBoxButtons.OK);
+                }
+            }
         }
 
         public async void InitStudents()
@@ -134,7 +167,6 @@ namespace Students
                 else if (e.KeyCode == Keys.S)
                 {
                     await SaveToPdf();
-                    InitStudents();
                 }
             }
             else if (e.KeyCode == Keys.Delete)
