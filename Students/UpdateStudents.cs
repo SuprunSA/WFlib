@@ -49,13 +49,22 @@ namespace Students
         private async void SaveChanges_Click(object sender, EventArgs e)
         {
             List<Student> stToUpdate = new();
+            var res = string.Empty;
             foreach (var control in Controls)
             {
                 if (control is StudentControl studentControl)
                 {
+                    var validResult = studentControl.Validate();
+                    if (!string.IsNullOrEmpty(validResult))
+                    {
+                        MessageBox.Show(validResult, "Update", MessageBoxButtons.OK);
+                    }
+                    res += validResult;
                     stToUpdate.Add(studentControl.GetStudent());
                 }
             }
+
+            if (!string.IsNullOrEmpty(res)) return;
 
             try
             {
